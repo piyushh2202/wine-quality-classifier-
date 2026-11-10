@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wine Quality Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="icon">🍷</div>
+      <h1>Wine Quality Predictor</h1>
+      <p class="subtitle">Enter the wine's chemical measurements to find out if it is good or not.</p>
+    </div>
+
+    <form method="POST">
+      <div class="grid">
+        {% for name, label, default in features %}
+        <label>
+          <span>{{ label }}</span>
+          <input type="number" step="any" name="{{ name }}"
+                 value="{{ values.get(name, default) }}" required>
+        </label>
+        {% endfor %}
+      </div>
+      <button type="submit">Predict quality</button>
+    </form>
+
+    {% if error %}
+      <div class="result error">{{ error }}</div>
+    {% endif %}
+
+    {% if result is not none %}
+      {% if result == "good" or result == 1 %}
+        <div class="result good">
+          🍷 Good quality wine
+          {% if confidence %}
+            <small>{{ confidence }}% confident</small>
+            <div class="bar"><div style="width: {{ confidence }}%"></div></div>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="result bad">
+          Not good quality
+          {% if confidence %}
+            <small>{{ confidence }}% confident</small>
+            <div class="bar"><div style="width: {{ confidence }}%"></div></div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+
+  
+  </div>
+</body>
+</html>
